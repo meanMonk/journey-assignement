@@ -6,7 +6,7 @@ Step to start the server locally
   `npm install`
 - Start server if you have local mongo instance running
   `npm run start`
-- Start server to directly check with MLAB instance configuration already done.
+- Start server in case of remote mongo instance from MLAB.
   `npm run start:dev`
 - Server can be accible at
   `http://localhost:3000`
