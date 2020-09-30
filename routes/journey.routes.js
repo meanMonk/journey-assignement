@@ -1,6 +1,7 @@
 const express = require('express');
 // load journey model;
 const journeyModel = require('../models/journey.model');
+const journeyValidator = require('../validators/journey.validators');
 
 // load journey route module;
 const journeyRouterModule = (function () {
@@ -10,7 +11,7 @@ const journeyRouterModule = (function () {
 	journeyRoute
 		.route('/journey')
 		.get(journeyService.loadJourneyList)
-		.post(journeyService.createJourney);
+		.post([journeyValidator, journeyService.createJourney]);
 	return journeyRoute;
 })();
 

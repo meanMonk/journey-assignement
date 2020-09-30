@@ -1,15 +1,43 @@
+const CircuitBreaker = require('opossum');
+
 const journeyService = (model) => {
+	const circuitFn = (req, res, model) => {
+		let circuit = new CircuitBreaker(model.save);
+		circuit.fallback(() => {
+			__logger.error('Mongodb server instance is unavailable!');
+		});
+		circuit.on('fallback', (err) => {
+			__logger.info('write the data to files', req.body);
+			//TODO: (Sahil) Can extend this function to write the data to file.
+			//  base on config file from env params or better to go with redis client.
+		});
+		circuit.on('success', () => {
+			res.send({
+				message: 'journey info has been created!',
+			});
+			// TOOD: need to improve the way of logging due to time being not spending much time.
+			__logger.info(`New document created!`);
+			return;
+		});
+		circuit.fire();
+	};
+
 	const createJourney = async (req, res) => {
 		try {
 			const journey = new model({
 				...req.body,
 			});
 
+			await journey.save();
+
+			res.send({
+				message: 'Journey info created!',
+			});
+
 			// save journey to database
-			const data = await journey.save();
-			res.send(data);
-			// TOOD: need to improve the way of logging due to time being not spending much time.
-			__logger.info(`new document created!`);
+			// TODO: circuit breaker function
+			// First time i tried to implement need more time to understand the flow so unable to complete.
+			// circuitFn(req, res, journey);
 		} catch (err) {
 			__logger.error(err);
 			if (err.code === 11000) {

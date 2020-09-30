@@ -9,6 +9,9 @@ const profileModel = new Schema({
 	},
 });
 
+// Indexing would help us to query the data base on customerId
+profileModel.index({ customerId: 1 });
+
 const formDataModel = new Schema({
 	dateTime: String,
 	disbursementMode: {
@@ -50,4 +53,8 @@ const journeyModel = new Schema({
 	journeyInfo: journeyInfoModel,
 });
 
-module.exports = mongoose.model('Journey_Col', journeyModel);
+const journeyCol = mongoose.model('Journey_Col', journeyModel);
+journeyCol.ensureIndexes((err) => {
+	__logger.error(err);
+});
+module.exports = journeyCol;

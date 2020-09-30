@@ -18,8 +18,9 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
 app.use('/health', (req, res) => {
+	res.send({ message: 'I am doing good!' });
 	__logger.info('Health check done!');
-	res.send('I am doing good!');
+	return;
 });
 
 app.use('/api', journeyRoutes);
@@ -27,15 +28,16 @@ app.use('/api', journeyRoutes);
 // global error handlers
 app.use(function (err, req, res, next) {
 	console.log('err', err);
-	res.locals.message = err.message;
+	res.locals.message = err.message || err;
 	res.locals.error = process.env.ENV === 'local' ? err : {};
 	__logger.error(
 		`${err.status || 500} - ${err.message} - ${req.originalUrl} - ${
 			req.method
 		} - ${req.ip}`,
 	);
-	res.status(err.status || 500);
-	res.render('error');
+	res.status(err.status || 500).send({
+		...res.locals,
+	});
 });
 
 app.listen(port, () => {
