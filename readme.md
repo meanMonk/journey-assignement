@@ -12,6 +12,8 @@ Step to start the server locally
   `http://localhost:3000`
 - To check the health of server
   `http://localhost:3000/health`
+- To load the journey details base on customerId
+  `http://localhost:3000/api/journey?customerId=<customer-id>`
 - To save the journey details like
 
 ```
