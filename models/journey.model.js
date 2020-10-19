@@ -57,4 +57,4 @@ const journeyCol = mongoose.model('Journey_Col', journeyModel);
 journeyCol.ensureIndexes((err) => {
 	__logger.error(err);
 });
-module.exports = journeyCol;
+module.exports = journeyCol; 
